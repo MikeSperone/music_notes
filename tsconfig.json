@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+        "target": "es2015",
+        "module": "commonjs",
+        "allowJs": true,
+        "checkJs": false,
+        "rootDir": "./",
+        "noEmit": true,
+        "strict": true,
+        "alwaysStrict": true,
+        "esModuleInterop": true,
+        "outDir": "./dist/"
+    }
+}
