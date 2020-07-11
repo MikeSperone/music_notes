@@ -1,7 +1,7 @@
-import { h, Component } from 'preact';
+import React from 'react';
 import Vex from 'vexflow';
 
-class Staff extends Component {
+class Staff extends React.Component {
     constructor(props) {
         super(props);
         this.props = props;

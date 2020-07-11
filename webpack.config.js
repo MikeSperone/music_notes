@@ -32,16 +32,13 @@ module.exports = {
     },
     resolve: {
         alias: {
-            components: path.resolve(__dirname, 'src/components/'),
-            "react": "preact/compat",
-            "react-dom/test-utils": "preact/test-utils",
-            "react-dom": "preact/compat",
+            "components": path.resolve(__dirname, 'src/components/'),
             // Must be below test-utils
         },
         extensions: [ '.tsx', '.ts', '.js', '.jsx' ],
         modules: [
             'node_modules',
-            './src'
+            'src'
         ],
     },
     output: {

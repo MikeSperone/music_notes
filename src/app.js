@@ -1,13 +1,27 @@
-import {h, Component} from 'preact';
+import React from 'react';
 
-import Menu from 'components/Menu';
+import AppMenu from 'components/Menus/AppMenu';
 import StaffPaper from 'components/StaffPaper';
 
-function App (props) {
-    return <div>
-            <Menu />
-            <StaffPaper />
-        </div>;
+class App extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            n: 0,
+        };
+    }
+
+    addStaffNote(){
+        this.setState(s => ({n: s.n + 1}));
+    }
+
+    render() {
+        return (
+            <div>
+                <StaffPaper />
+            </div>
+        );
+    }
 }
 
 export default App;
