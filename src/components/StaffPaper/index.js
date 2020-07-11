@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import Staff from './staff';
-import Vex from 'vexflow';
+import StaffNote from 'components/StaffNote';
 import confirmation from 'components/modals/confirmation';
 import StaffPaperMenu from 'components/Menus/StaffPaperMenu';
 
@@ -10,21 +9,24 @@ class StaffPaper extends Component {
         this.props = props;
         this.id = 'paper';
         this.state = {
-            staffNotes: []
+            targets: this.getTargets(),
+            staffNotes: [{name: "staff_0", clef: "treble", timeSignature: "4/4"}],
         };
         this._bind();
     }
 
     _bind() {
-        this.addStaffNote = this.addStaffNote.bind(this);
-        this.removeStaffNote = this.removeStaffNote.bind(this);
+        this.addNote = this.addNote.bind(this);
+        this.removeNote = this.removeNote.bind(this);
+        this.createNote = this.createNote.bind(this);
+        this.getTargets = this.getTargets.bind(this);
     }
 
     componentDidMount() {
 
     }
-
-    addStaffNote() {
+            
+    addNote() {
         console.log('adding note');
         this.setState(s => {
             const newNote = {
@@ -33,29 +35,36 @@ class StaffPaper extends Component {
                 timeSignature: "4/4"
             };
             s.staffNotes.push(newNote);
+            s.targets = this.getTargets();
             return s;
         });
     }
 
-    removeStaffNote() {
+    removeNote() {
         if (confirmation()) {
             // remove
         };
     }
 
+    createNote(note) {
+        return <StaffNote
+            key={note.name}
+            name={note.name}
+            clef={note.clef}
+            timeSignature={note.timeSignature}
+        />
+    }
+
+    getTargets() {
+        return document.getElementsByClassName(this.targetClass);
+    }
+
     render() {
         return (<div id={'paper'}>
             <StaffPaperMenu
-                handleAddStaffNote={this.addStaffNote}
+                handleAddStaffNote={this.addNote}
             />
-            {this.state.staffNotes.map(note => (
-                <Staff
-                    key={note.name}
-                    name={note.name}
-                    clef={note.clef}
-                    timeSignature={note.timeSignature}
-                />
-            ))}
+            {this.state.staffNotes.map(this.createNote)}
         </div>);
     }
 }

@@ -30,7 +30,12 @@ class Staff extends React.Component {
     }
 
     render() {
-        return (<div id={this.id}></div>);
+        return (
+            <div className="panel panel-default staff-note" style={{display: 'inline-block'}}>
+                <div className="panel-heading"></div>
+                <div className="panel-body" id={this.id}></div>
+            </div>
+        );
     }
 }
 
