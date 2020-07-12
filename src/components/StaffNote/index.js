@@ -1,9 +1,11 @@
 import React from 'react';
 import Vex from 'vexflow';
 import MoveableStaff from 'components/MoveableStaff';
+import PanelMenu from 'components/Menus/PanelMenu';
+import TextEditNotes from 'components/EditNotes/TextEditNotes';
 
 import StaffMusic from 'components/StaffSnippet';
-import styles from './styles.scss';
+// import styles from './styles.scss';
 // import {  } from 'react-burger-menu';
 
 class Staff extends React.Component {
@@ -14,6 +16,7 @@ class Staff extends React.Component {
         this.clef = this.props.clef;
         this.timeSignature = this.props.timeSignature;
         this.score = null;
+        this.uuid = this.generateUUID();
         this.state = {
             showMenu: false,
             editing: false,
@@ -25,15 +28,33 @@ class Staff extends React.Component {
     _bind() {
         this.handleHover = this.handleHover.bind(this);
         this.showMenu = this.showMenu.bind(this);
+        this.hideMenu = this.hideMenu.bind(this);
+        this.toggleEditing = this.toggleEditing.bind(this);
     }
+
     componentDidMount() {
+        if (!window.data) window.data = {};
+        this.data = window.data[this.uuid];
+    }
+
+    generateUUID() {
+        return this.props.name +
+            "-" +
+            Math.floor(Math.random() * 10e8) +
+            "-" +
+            Math.floor(Math.random() * 10e8);
     }
 
     handleHover() {
+        this.showMenu();
     }
 
     showMenu() {
-        // toggleState('showMenu');
+        this.setState(() => ({showMenu: true}));
+    }
+
+    hideMenu() {
+        this.setState(() => ({showMenu: false}));
     }
 
     toggleState(key) {
@@ -42,17 +63,26 @@ class Staff extends React.Component {
             return s;
         });
     }
+
+    toggleEditing() {
+        this.toggleState('editing');
+    }
                     // <StaffMenu right />
     render() {
         return (
             <div>
-                <div id={this.id} className="panel panel-default staff-note" onClick={this.showMenu} style={{display: 'inline-block'}}>
-                    <div className={"panel-heading " + (this.state.showHeading ? "" : "in") + "visible"} onMouseMove={this.handleHover}>music 
-                        <div className={"staff-menu " + (this.state.showMenu ? "" : "in") + "visible"}>Hello menu</div>
-                    </div>
-                    <StaffMusic className="panel-body" id={this.id} {...this.props} />
+                <div
+                    id={this.uuid}
+                    className="panel panel-default staff-note"
+                    onMouseEnter={this.showMenu}
+                    onMouseLeave={this.hideMenu}
+                    style={{display: 'inline-block', background: 'rgba(0,0,0,0)'}}
+                >
+                    <PanelMenu className={"panel-heading " + (this.state.showMenu ? "" : "in") + "visible"} toggleEdit={this.toggleEditing}/>
+                    <StaffMusic className="panel-body" editing={this.state.editing} uuid={this.uuid} {...this.props} />
                 </div>
-                <MoveableStaff selector={".staff-note#" + this.id} />
+                { this.state.editing && <TextEditNotes setValues={this.setValues} noteId={this.uuid} currentValues={this.data.staves}/> }
+                <MoveableStaff selector={".staff-note#" + this.uuid} />
             </div>
         );
     }

@@ -11,6 +11,7 @@ class StaffMusic extends React.Component {
 
         this.staffRef = React.createRef();
         this.state = {
+            editing: false,
             staves: [
                 {
                     timeSignature: this.props.timeSignature,
@@ -33,7 +34,7 @@ class StaffMusic extends React.Component {
                     ],
                 }
             ]
-        }
+        };
         this.width = 500;
         this.height = 200;
         this._bind();
@@ -44,6 +45,17 @@ class StaffMusic extends React.Component {
         this.createStaff = this.createStaff.bind(this);
         this.createVoice = this.createVoice.bind(this);
         this.createNotes = this.createNotes.bind(this);
+        this.setValues = this.setValues.bind(this);
+    }
+
+    setData(data) {
+        this.setState(() => (data));
+        window.data[this.props.uuid] = data;
+    }
+
+    setValues(staves) {
+        this.setState(s => s.staves = staves);
+        alert('values set... now do something with it');
     }
 
     createVoice(notes) {
@@ -83,6 +95,13 @@ class StaffMusic extends React.Component {
     }
 
     componentDidMount() {
+        if (!window.data) window.data = {};
+        const data = window.data[this.props.uuid];
+        if (typeof data !== "undefined" && typeof data.staves !== "undefined") {
+            this.setState(() => ({staves: data.staves}), );
+        } else {
+            window.data[this.props.uuid] = this.state;
+        }
         this.setupScore();
         this.state.staves.forEach(staff => this.createStaff(staff));
     }

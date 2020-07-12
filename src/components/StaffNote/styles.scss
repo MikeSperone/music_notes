@@ -1,9 +1,9 @@
 .staff-note {
     background: green;
-    .staff-menu {
+    .panel-heading {
         display: none;
     }
-    &:hover .staff-menu {
-        display: block;
+    &:hover .panel-heading {
+        display: block !important;
     }
 }
