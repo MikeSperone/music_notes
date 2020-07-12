@@ -46,7 +46,6 @@ class StaffMusic extends React.Component {
         this.createStaff = this.createStaff.bind(this);
         this.createVoice = this.createVoice.bind(this);
         this.createNotes = this.createNotes.bind(this);
-        this.resize = this.resize.bind(this);
     }
 
     createVoice(notes) {
@@ -85,17 +84,7 @@ class StaffMusic extends React.Component {
         voices.forEach(v => v.draw(this.context, s));
     }
 
-    resize(w, h) {
-        //TODO: do something
-        const svg = this.staffRef.current.querySelector('svg');
-        svg.viewBox=`0 0 ${w} ${h}`;
-    }
-    redrawSystem() {
-        this.vf.draw();
-    }
-
     componentDidMount() {
-
         this.setupScore();
         this.state.staves.forEach(staff => this.createStaff(staff));
     }
@@ -106,7 +95,6 @@ class StaffMusic extends React.Component {
                 <div className="panel-body" id={this.id} ref={this.staffRef}></div>
                 <MoveableStaff
                     selector={"#" + this.id}
-                    onResize={this.resize}
                 />
             </div>
         );

@@ -5,14 +5,36 @@ const MoveableStaff = props => {
     const [target, setTarget] = React.useState();
     const [frame] = React.useState({
         translate: [0,0],
-        width: 100,
-        height: 100,
+        scale: [1,1],
         rotate: 0,
     });
 
     React.useEffect(() => {
         setTarget(document.querySelector(props.selector));
     }, []);
+
+    const translate = () => {
+        target.style.transform
+            = `translate(${frame.translate[0]}px, ${frame.translate[1]}px)`
+            + ` scale(${frame.scale[0]}, ${frame.scale[1]})`
+            + `rotate(${frame.rotate}deg)`;
+    }
+
+    const drag = ({ target, beforeTranslate  }) => {
+        frame.translate = beforeTranslate;
+        translate();
+    };
+
+    const rotate = ({ beforeRotate }) => {
+        frame.rotate = beforeRotate;
+        translate();
+    };
+
+    const scale = ({ target, scale, drag }) => {
+        frame.translate = drag.beforeTranslate;
+        frame.scale = scale;
+        translate();
+    };
 
     return (
             <Moveable
@@ -22,42 +44,26 @@ const MoveableStaff = props => {
                 draggable={true}
                 throttleDrag={0}
                 throttleDragRotate={0}
-                onDragStart={({ set  }) => {
+                onDragStart={({ set }) => {
                     set(frame.translate);
                 }}
-                onDrag={({ target, beforeTranslate  }) => {
-                    frame.translate = beforeTranslate;
-                    target.style.transform = `translate(${beforeTranslate[0]}px, ${beforeTranslate[1]}px)`;
+                onDrag={drag}
 
-                }}
-
-                // Resizable
-                resizable={true}
+                scalable={true}
                 keepRatio={false}
-                throttleResize={0}
-                onResizeStart={({ setOrigin, dragStart  }) => {
-                    setOrigin(["%", "%"]);
+                throttleScale={0}
+                onScaleStart={({ set, dragStart, rotateStart }) => {
+                    set(frame.scale);
                     dragStart && dragStart.set(frame.translate);
+                    rotateStart && rotateStart.set(frame.rotate);
                 }}
-                onResize={({ target, width, height, drag  }) => {
-                    const beforeTranslate = drag.beforeTranslate;
-                    frame.translate = beforeTranslate;
-                    target.style.width = `${width}px`;
-                    target.style.height = `${height}px`;
-                    target.style.transform = `translate(${beforeTranslate[0]}px, ${beforeTranslate[1]}px)`;
-                    props.onResize(width, height);
-                }}
+                onScale={scale}
 
                 rotatable={true}
                 throttleRotate={0}
                 rotationPosition={"top"}
-                onRotateStart={({ set  }) => {
-                    set(frame.rotate);
-                }}
-                onRotate={({ beforeRotate  }) => {
-                    frame.rotate = beforeRotate;
-                    target.style.transform = `rotate(${beforeRotate}deg)`;
-                }}
+                onRotateStart={({ set }) => set(frame.rotate) }
+                onRotate={ rotate }
 
                 renderDirections={["nw","n","ne","w","e","sw","s","se"]}
                 zoom={1}
