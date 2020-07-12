@@ -7,23 +7,34 @@ class StaffMusic extends React.Component {
         super(props);
         this.props = props;
         this.id = this.props.name;
-        this.clef = this.props.clef;
-        this.timeSignature = this.props.timeSignature;
-        this.score = null;
-        this.system = null;
-        this.vf = null;
+        this.VF = null;
+        this.renderer = null;
+        this.context = null;
+
         this.staffRef = React.createRef();
         this.state = {
-            voices: [
+            staves: [
                 {
-                    notes: 'C#5/q, B4, A4, G#4',
-                    options: {stem: 'up'}
-                },
-                {
-                    notes: 'C#4/h, C#4',
-                    options: {stem: 'down'}
+                    timeSignature: this.props.timeSignature,
+                    clef: this.props.clef,
+                    voices: [
+                        {
+                            notes: [
+                                { clef: this.props.clef, keys: ['C#/5'], duration: 'q'},
+                                { clef: this.props.clef, keys: ['B/4'], duration: 'q'},
+                                { clef: this.props.clef, keys: ['A/4'], duration: 'q'},
+                                { clef: this.props.clef, keys: ['G#/4'], duration: 'q'}
+                            ],
+                        },
+                        {
+                            notes: [
+                                { clef: this.props.clef, keys: ['C#/4'], duration: 'h'},
+                                { clef: this.props.clef, keys: ['C#/4'], duration: 'h'},
+                            ],
+                        }
+                    ],
                 }
-            ],
+            ]
         }
         this.width = 500;
         this.height = 200;
@@ -32,26 +43,46 @@ class StaffMusic extends React.Component {
 
     _bind() {
         this.setupScore = this.setupScore.bind(this);
+        this.createStaff = this.createStaff.bind(this);
         this.createVoice = this.createVoice.bind(this);
         this.createNotes = this.createNotes.bind(this);
         this.resize = this.resize.bind(this);
     }
 
-    createVoice(notes, options) {
-        return this.score.voice(notes, options);
+    createVoice(notes) {
+        return new this.VF.Voice({num_beats: 4, beat_value: 4})
+            .addTickables(notes);
     }
 
-    createNotes(voice) {
-        return this.score.notes(voice)
+    createNotes(notes) {
+        return notes.map(n => new this.VF.StaveNote(n));
     }
 
     setupScore() {
-        this.vf = new Vex.Flow.Factory({
-              renderer: {elementId: this.id, width: this.width, height: this.height}
-        });
+        // Basic setup boilerplate for using VexFlow with the SVG rendering context:
+        this.VF = Vex.Flow;
 
-        this.score = this.vf.EasyScore();
-        this.system = this.vf.System();
+        // Create an SVG renderer and attach it to the DIV element named "boo".
+        this.renderer = new this.VF.Renderer(this.staffRef.current, this.VF.Renderer.Backends.SVG);
+
+        // Configure the rendering context.
+        this.renderer.resize(this.width, this.height);
+        this.context = this.renderer.getContext();
+    }
+
+    createStaff(staff) {
+        var s = new this.VF.Stave(10, 10, this.width);
+        if (staff.clef) s = s.addClef(staff.clef);
+        if (staff.timeSignature) s = s.addTimeSignature(staff.timeSignature);
+        s.setContext(this.context).draw();
+        const voices = staff.voices.map(v => {
+            const notes = this.createNotes(v.notes);
+            return this.createVoice(notes);
+        })
+        var formatter = new this.VF.Formatter()
+                .joinVoices(voices)
+                .format(voices, this.width);
+        voices.forEach(v => v.draw(this.context, s));
     }
 
     resize(w, h) {
@@ -66,15 +97,7 @@ class StaffMusic extends React.Component {
     componentDidMount() {
 
         this.setupScore();
-        const voices = this.state.voices.map(voice => {
-            return this.createVoice(this.createNotes(voice.notes, voice.options));
-        });
-        this.system
-            .addStave({ voices })
-            .addClef(this.clef)
-            .addTimeSignature(this.timeSignature);
-
-        this.redrawSystem();
+        this.state.staves.forEach(staff => this.createStaff(staff));
     }
 
     render() {
