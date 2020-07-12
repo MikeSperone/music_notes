@@ -1,0 +1,9 @@
+.staff-note {
+    background: green;
+    .staff-menu {
+        display: none;
+    }
+    &:hover .staff-menu {
+        display: block;
+    }
+}

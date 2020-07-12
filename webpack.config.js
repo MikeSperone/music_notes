@@ -1,10 +1,14 @@
 const path = require('path');
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 module.exports = {
     entry: './src/index.js',
     devServer: {
-         contentBase: './dist',
+        contentBase: './dist',
     },
+    plugins: [
+        new MiniCssExtractPlugin(),
+    ],
     module: {
         rules: [
             {
@@ -27,7 +31,32 @@ module.exports = {
                     }
                 }
             },
-          
+            {
+                test: /\.scss$/,
+                use: [
+                    {
+                        loader: MiniCssExtractPlugin.loader,
+                        options: {
+                            hmr: process.env.NODE_ENV === 'development',
+
+                        },
+
+                    },
+                    'css-loader',
+                    {
+                        loader: 'sass-loader',
+                        options: {
+                            // Prefer `dart-sass`
+                            //                             implementation: require('sass'),
+                            //                                                     
+                        },
+
+                    },
+
+                ]
+
+            },
+
         ]
     },
     resolve: {
@@ -37,9 +66,9 @@ module.exports = {
         },
         extensions: [ '.tsx', '.ts', '.js', '.jsx' ],
         modules: [
-            'node_modules',
-            'src'
-        ],
+        'node_modules',
+        'src'
+    ],
     },
     output: {
         filename: 'main.js',
