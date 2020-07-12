@@ -1,12 +1,10 @@
 import React from 'react';
-import MoveableStaff from './moveable';
 import Vex from 'vexflow';
 
 class StaffMusic extends React.Component {
     constructor(props) {
         super(props);
         this.props = props;
-        this.id = this.props.name;
         this.VF = null;
         this.renderer = null;
         this.context = null;
@@ -91,12 +89,7 @@ class StaffMusic extends React.Component {
 
     render() {
         return (
-            <div>
-                <div className="panel-body" id={this.id} ref={this.staffRef}></div>
-                <MoveableStaff
-                    selector={"#" + this.id}
-                />
-            </div>
+            <div className="panel-body" ref={this.staffRef}></div>
         );
     }
 }

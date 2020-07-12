@@ -1,5 +1,6 @@
 import React from 'react';
 import Vex from 'vexflow';
+import MoveableStaff from 'components/MoveableStaff';
 
 import StaffMusic from 'components/StaffSnippet';
 import styles from './styles.scss';
@@ -44,11 +45,14 @@ class Staff extends React.Component {
                     // <StaffMenu right />
     render() {
         return (
-            <div className="panel panel-default staff-note" onClick={this.showMenu} style={{display: 'inline-block'}}>
-                <div className={"panel-heading " + (this.state.showHeading ? "" : "in") + "visible"} onMouseMove={this.handleHover}>music 
-                    <div className={"staff-menu " + (this.state.showMenu ? "" : "in") + "visible"}>Hello menu</div>
+            <div>
+                <div id={this.id} className="panel panel-default staff-note" onClick={this.showMenu} style={{display: 'inline-block'}}>
+                    <div className={"panel-heading " + (this.state.showHeading ? "" : "in") + "visible"} onMouseMove={this.handleHover}>music 
+                        <div className={"staff-menu " + (this.state.showMenu ? "" : "in") + "visible"}>Hello menu</div>
+                    </div>
+                    <StaffMusic className="panel-body" id={this.id} {...this.props} />
                 </div>
-                <StaffMusic className="panel-body" id={this.id} {...this.props} />
+                <MoveableStaff selector={".staff-note#" + this.id} />
             </div>
         );
     }
