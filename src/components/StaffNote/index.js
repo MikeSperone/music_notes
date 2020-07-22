@@ -2,11 +2,11 @@ import React from 'react';
 import Vex from 'vexflow';
 import MoveableStaff from 'components/MoveableStaff';
 import PanelMenu from 'components/Menus/PanelMenu';
-import TextEditNotes from 'components/EditNotes/TextEditNotes';
+// import TextEditNotes from 'components/Editor/TextEditNotes';
+import CodeEditor from 'components/Editor/CodeEditor';
 
-import StaffMusic from 'components/StaffSnippet';
+import StaffMusic from './StaffSnippet';
 // import styles from './styles.scss';
-// import {  } from 'react-burger-menu';
 
 class Staff extends React.Component {
     constructor(props) {
@@ -21,6 +21,7 @@ class Staff extends React.Component {
             showMenu: false,
             editing: false,
             warping: false,
+            xmlString: ''
         }
         this._bind();
     }
@@ -30,6 +31,7 @@ class Staff extends React.Component {
         this.showMenu = this.showMenu.bind(this);
         this.hideMenu = this.hideMenu.bind(this);
         this.toggleEditing = this.toggleEditing.bind(this);
+        this.handleCodeEditorChange = this.handleCodeEditorChange.bind(this);
     }
 
     componentDidMount() {
@@ -64,6 +66,11 @@ class Staff extends React.Component {
         });
     }
 
+    handleCodeEditorChange(p) {
+        console.info('p.value: ', p.value);
+        this.setState(() => ({xmlString: p.value}), () => console.info('state set'));;
+    }
+
     toggleEditing() {
         this.toggleState('editing');
     }
@@ -79,9 +86,22 @@ class Staff extends React.Component {
                     style={{display: 'inline-block', background: 'rgba(0,0,0,0)'}}
                 >
                     <PanelMenu className={"panel-heading " + (this.state.showMenu ? "" : "in") + "visible"} toggleEdit={this.toggleEditing}/>
-                    <StaffMusic className="panel-body" editing={this.state.editing} uuid={this.uuid} {...this.props} />
+                    <StaffMusic
+                        className="panel-body"
+                        editing={this.state.editing}
+                        uuid={this.uuid}
+                        xmlString={this.state.xmlString}
+                        {...this.props}
+                    />
                 </div>
-                { this.state.editing && <TextEditNotes setValues={this.setValues} noteId={this.uuid} currentValues={this.data.staves}/> }
+                { this.state.editing && (
+                    <CodeEditor
+                        onChange={this.handleCodeEditorChange}
+                        setValues={this.setValues}
+                        noteId={this.uuid}
+                        currentValues={this.data.staves}
+                    />
+                )}
                 <MoveableStaff selector={".staff-note#" + this.uuid} />
             </div>
         );

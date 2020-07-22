@@ -2,27 +2,29 @@ import React from 'react';
 
 const NoteForm = props => {
     return (
-        <div className="form-group row">
-            <ClefForm clef={props.clef} />
+        <div id="keys" name="keys" className="form-group row">
+            <ClefForm name={"clef"} clef={props.clef} />
             <label htmlFor="keys" className="col-sm-1 control-label">Keys</label>
             <div className="col-sm-3">
-                <input type="text" className="form-control" id="keys" placeholder={props.keys || "[C#/5]"} />
+                <input name={"note_names"} type="text" className="form-control" id="note_names" placeholder={props.keys || "[C#/5]"} />
             </div>
-            <DurationForm duration={props.duration} />
+            <DurationForm name={"duration"} duration={props.duration} />
         </div>
-
     );
-}
+};
 
 const VoiceForm = props => {
-    return props.notes.map((note, i) => <NoteForm key={"note-" + i} {...note} />);
-}
+    return <div id="voices" name="voices" className="form-group" >
+        <legend>Notes</legend>
+        {props.notes.map((note, i) => <NoteForm key={"note-" + i} {...note} />)}
+    </div>;
+};
 
 const ClefForm = props => (
     <React.Fragment>
-        <label htmlFor="select" className="col-sm-1 control-label">Clef</label>
+        <label htmlFor={props.name} className="col-sm-1 control-label">Clef</label>
         <div className="col-sm-3">
-            <select className="form-control" id="select">
+            <select className="form-control" id={props.name} name={props.name}>
                 <option>"treble"</option>
                 <option>"bass"</option>
             </select>
@@ -32,9 +34,9 @@ const ClefForm = props => (
 
 const DurationForm = props => (
     <React.Fragment>
-        <label htmlFor="select" className="col-sm-2 control-label">Duration</label>
+        <label htmlFor={props.name} className="col-sm-2 control-label">Duration</label>
         <div className="col-sm-2">
-            <select className="form-control" id="select">
+            <select className="form-control" id={props.name} name={props.name}>
                 <option>"q"</option>
                 <option>"h"</option>
             </select>
@@ -51,11 +53,13 @@ const Form = props => {
                 <div className="col-lg-10">
                     <input type="text" className="form-control" id="timeSignature" placeholder={props.timeSignature || "4/4"} />
                 </div>
-                <ClefForm clef={props.clef} />
+                <ClefForm name="clef" clef={props.clef} />
             </div>
             <div className="form-group">
-                <legend>Voices</legend>
-                {props.voices.map((voice, i) => <VoiceForm key={"voice-" + i} {...voice} />)}
+                <fieldset id="voices" name="voices">
+                    <legend>Voices</legend>
+                    {props.voices.map((voice, i) => <VoiceForm voiceIndex={i} key={"voice-" + i} {...voice} />)}
+                </fieldset>
             </div>
         </React.Fragment>
     );
@@ -74,16 +78,14 @@ class TextEditNotes extends React.Component {
         this.modalRef.current.style.display = "block";
     }
 
-    handleSubmit(form) {
+    handleSubmit({target}) {
         var firstVal, lastVal, emailVal, error = '';
 
         console.log('form submitted');
-        console.log(form);
+        console.log(target);
 
-            //OR
-        //firstVal= document.getElementById('first').value;  
-        //lastVal= document.getElementById('last').value;
-        //emailVal= document.getElementById('email').value;
+        const { timeSignature, clef } = target;
+        console.log(timeSignature.value, clef.value);
 
         return true;
     }
@@ -93,7 +95,7 @@ class TextEditNotes extends React.Component {
             <div className="modal" ref={this.modalRef}>
                 <div className="modal-dialog">
                     <div className="modal-content">
-                        <form className="form-horizontal" >
+                        <form className="form-horizontal" onSubmit={this.handleSubmit}>
                             <div className="modal-header">
                                 <button type="button" className="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                                 <h4 className="modal-title">Modal title</h4>
@@ -104,7 +106,7 @@ class TextEditNotes extends React.Component {
                                     <div className="form-group">
                                       <div className="col-lg-10 col-lg-offset-2">
                                         <button type="reset" className="btn btn-default">Cancel</button>
-                                        <button type="submit" onClick={this.handleSubmit} className="btn btn-primary">Submit</button>
+                                        <button type="submit" className="btn btn-primary">Submit</button>
                                       </div>
                                     </div>
                                 </fieldset>

@@ -1,13 +1,18 @@
 const path = require('path');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
+const environment = process.env.NODE_ENV;
+
 module.exports = {
     entry: './src/index.js',
     devServer: {
         contentBase: './dist',
     },
+    mode: environment,
     plugins: [
-        new MiniCssExtractPlugin(),
+        new MiniCssExtractPlugin({
+            filename: 'styles.css',
+        }),
     ],
     module: {
         rules: [
@@ -32,31 +37,25 @@ module.exports = {
                 }
             },
             {
-                test: /\.scss$/,
+                test: /\.s?css$/,
                 use: [
                     {
                         loader: MiniCssExtractPlugin.loader,
                         options: {
-                            hmr: process.env.NODE_ENV === 'development',
-
+                            hmr: environment === 'development',
                         },
-
                     },
+                    // 'style-loader',
                     'css-loader',
                     {
                         loader: 'sass-loader',
                         options: {
                             // Prefer `dart-sass`
-                            //                             implementation: require('sass'),
-                            //                                                     
+                            implementation: require('sass'),
                         },
-
                     },
-
                 ]
-
             },
-
         ]
     },
     resolve: {

@@ -1,10 +1,13 @@
 import React from 'react';
 import Vex from 'vexflow';
+import renderFromXML from './renderFromXML';
+import Music from 'lib/vexflowFormat';
 
 class StaffMusic extends React.Component {
     constructor(props) {
         super(props);
         this.props = props;
+        this.xmlString = this.props.xmlString;
         this.VF = null;
         this.renderer = null;
         this.context = null;
@@ -12,6 +15,7 @@ class StaffMusic extends React.Component {
         this.staffRef = React.createRef();
         this.state = {
             editing: false,
+            xmlString: this.props.xmlString,
             staves: [
                 {
                     timeSignature: this.props.timeSignature,
@@ -19,18 +23,9 @@ class StaffMusic extends React.Component {
                     voices: [
                         {
                             notes: [
-                                { clef: this.props.clef, keys: ['C#/5'], duration: 'q'},
-                                { clef: this.props.clef, keys: ['B/4'], duration: 'q'},
-                                { clef: this.props.clef, keys: ['A/4'], duration: 'q'},
-                                { clef: this.props.clef, keys: ['G#/4'], duration: 'q'}
+                                { keys: ['C#/5'], duration: 'w'},
                             ],
                         },
-                        {
-                            notes: [
-                                { clef: this.props.clef, keys: ['C#/4'], duration: 'h'},
-                                { clef: this.props.clef, keys: ['C#/4'], duration: 'h'},
-                            ],
-                        }
                     ],
                 }
             ]
@@ -45,17 +40,26 @@ class StaffMusic extends React.Component {
         this.createStaff = this.createStaff.bind(this);
         this.createVoice = this.createVoice.bind(this);
         this.createNotes = this.createNotes.bind(this);
-        this.setValues = this.setValues.bind(this);
+        this.saveData = this.saveData.bind(this);
+        this.setStavesState = this.setStavesState.bind(this);
+        this.printStaves = this.printStaves.bind(this);
     }
 
-    setData(data) {
+    saveData(data) {
+        // save data to the outside source
         this.setState(() => (data));
         window.data[this.props.uuid] = data;
     }
 
-    setValues(staves) {
+    setStavesState(staves) {
+        // setState with new staves
         this.setState(s => s.staves = staves);
         alert('values set... now do something with it');
+    }
+
+    printStaves() {
+        // write staves to the screen
+        this.state.staves.forEach(staff => this.createStaff(staff));
     }
 
     createVoice(notes) {
@@ -81,32 +85,57 @@ class StaffMusic extends React.Component {
 
     createStaff(staff) {
         var s = new this.VF.Stave(10, 10, this.width);
+
         if (staff.clef) s = s.addClef(staff.clef);
         if (staff.timeSignature) s = s.addTimeSignature(staff.timeSignature);
+
         s.setContext(this.context).draw();
+
         const voices = staff.voices.map(v => {
             const notes = this.createNotes(v.notes);
             return this.createVoice(notes);
         })
+
         var formatter = new this.VF.Formatter()
                 .joinVoices(voices)
                 .format(voices, this.width);
+
         voices.forEach(v => v.draw(this.context, s));
     }
 
     componentDidMount() {
+        console.info('staff snippet');
         if (!window.data) window.data = {};
         const data = window.data[this.props.uuid];
         if (typeof data !== "undefined" && typeof data.staves !== "undefined") {
-            this.setState(() => ({staves: data.staves}), );
+            this.setStavesState(data.staves);
         } else {
-            window.data[this.props.uuid] = this.state;
+            this.saveData(this.state);
         }
-        this.setupScore();
-        this.state.staves.forEach(staff => this.createStaff(staff));
+        if (this.xmlString) {
+            console.info('xml string');
+            renderFromXML(this.xmlString, this.staffRef.current);
+        } else {
+            this.setupScore();
+            this.printStaves();
+        }
+    }
+
+    shouldComponentUpdate(props) {
+        console.info('staff snippet should update?');
+        if (props.xmlString !== this.xmlString) {
+            console.info('yes');
+            return true;
+        }
+        return false;
+    }
+
+    componentDidUpdate() {
+        renderFromXML(this.props.xmlString, this.staffRef.current);
     }
 
     render() {
+        console.info('staff snippet rendering');
         return (
             <div className="panel-body" ref={this.staffRef}></div>
         );

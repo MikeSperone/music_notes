@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 
 import { slide as BurgerMenu } from 'react-burger-menu';
-import MenuItem from './MenuItem';
+import MenuItem from 'components/Menus/MenuItem';
 
-import styles from './styles';
+import styles from 'components/Menus/styles';
 
 
 const StaffPaperMenu = (props) => (

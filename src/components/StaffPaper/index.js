@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import StaffNote from 'components/StaffNote';
 import confirmation from 'components/modals/confirmation';
-import StaffPaperMenu from 'components/Menus/StaffPaperMenu';
+import StaffPaperMenu from './StaffPaperMenu';
 
 class StaffPaper extends Component {
     constructor(props) {
