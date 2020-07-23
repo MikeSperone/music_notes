@@ -4,6 +4,7 @@ import MoveableStaff from 'components/MoveableStaff';
 import PanelMenu from 'components/Menus/PanelMenu';
 // import TextEditNotes from 'components/Editor/TextEditNotes';
 import CodeEditor from 'components/Editor/CodeEditor';
+import debounce from 'lodash/debounce';
 
 import StaffMusic from './StaffSnippet';
 // import styles from './styles.scss';
@@ -66,10 +67,14 @@ class Staff extends React.Component {
         });
     }
 
-    handleCodeEditorChange(p) {
-        console.info('p.value: ', p.value);
-        this.setState(() => ({xmlString: p.value}), () => console.info('state set'));;
-    }
+    handleCodeEditorChange = debounce((editor, data, value) => {
+        console.info('handling code editor change');
+        console.info('p.value: ', value);
+        this.setState(
+            () => ({xmlString: value}),
+            () => console.info('state set')
+        );
+    }, 1000);
 
     toggleEditing() {
         this.toggleState('editing');
@@ -88,7 +93,6 @@ class Staff extends React.Component {
                     <PanelMenu className={"panel-heading " + (this.state.showMenu ? "" : "in") + "visible"} toggleEdit={this.toggleEditing}/>
                     <StaffMusic
                         className="panel-body"
-                        editing={this.state.editing}
                         uuid={this.uuid}
                         xmlString={this.state.xmlString}
                         {...this.props}

@@ -1,7 +1,7 @@
 .staff-note {
-    background: green;
     .panel-heading {
-        display: none;
+        position: absolute;
+        width: 100%;
     }
     &:hover .panel-heading {
         display: block !important;

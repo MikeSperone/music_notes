@@ -74,13 +74,7 @@ export default class CodeEditor extends React.Component {
             onBeforeChange={(editor, data, value) => {
                 this.setState({value});
             }}
-            onChange={(editor, data, value) => {
-                console.log('changed');
-                console.log('editor', editor);
-                console.log('data', data);
-                console.log('value', value);
-                this.handleChange({editor, data, value});
-            }}
+            onChange={this.handleChange}
         />;
     }
 }
