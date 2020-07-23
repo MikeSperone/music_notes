@@ -2,6 +2,8 @@ import React from 'react';
 import Moveable from 'react-moveable';
 
 const MoveableStaff = props => {
+    const snappable = props.snapToGrid;
+
     const [target, setTarget] = React.useState();
     const [frame] = React.useState({
         translate: [0,0],
@@ -35,6 +37,27 @@ const MoveableStaff = props => {
         frame.scale = scale;
         translate();
     };
+    const matrix = [
+        1, 0, 0, 0,
+        0, 1, 0, 0,
+        0, 0, 1, 0,
+        0, 0, 0, 1,
+    ];
+
+    const warp = ({
+            target,
+            clientX,
+            clientY,
+            delta,
+            dist,
+            multiply,
+            transform,
+        }) => {
+            console.log("onWarp", target);
+            // target.style.transform = transform;
+            matrix = multiply(matrix, delta);
+            target.style.transform = `matrix3d(${matrix.join(",")})`;
+        };
 
     return (
             <Moveable
@@ -64,6 +87,16 @@ const MoveableStaff = props => {
                 rotationPosition={"top"}
                 onRotateStart={({ set }) => set(frame.rotate) }
                 onRotate={ rotate }
+
+                warpable={props.warpable}
+                
+                onWarpStart={({ target, clientX, clientY  }) => {
+                    console.log("onWarpStart", target);
+                }}
+                onWarp={warp}
+                onWarpEnd={({ target, isDrag, clientX, clientY  }) => {
+                    console.log("onWarpEnd", target, isDrag);
+                }}
 
                 renderDirections={["nw","n","ne","w","e","sw","s","se"]}
                 zoom={1}

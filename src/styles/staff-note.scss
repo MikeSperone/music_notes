@@ -2,9 +2,11 @@
     .panel-heading {
         position: absolute;
         width: 100%;
+        visibility: hidden;
+        z-index: 99;
     }
     &:hover .panel-heading {
-        display: block !important;
+        visibility: visible;
     }
 
     .panel-body {

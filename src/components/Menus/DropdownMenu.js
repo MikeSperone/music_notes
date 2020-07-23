@@ -19,15 +19,10 @@ class DropdownMenu extends Component {
     render() {
         return (
             <li className="dropdown">
-                <a className="dropdown-toggle" onClick={this.handleOpen} href="#">
-                    Dropdown <span className="caret"></span>
+                <a className="dropdown-toggle" data-toggle="dropdown" href="#">
+                    {this.props.name || "Dropdown"} <span className="caret"></span>
                 </a>
-            {
-                this.state.open ?
-                    ( <ul className="ropdown-menu " style={{"display": "block !important"}}>
-                        {this.props.children}
-                    </ul> ) : null
-            }
+                <ul className="dropdown-menu ">{this.props.children}</ul>
             </li>
         );
     }

@@ -20,9 +20,15 @@ class Staff extends React.Component {
         this.uuid = this.generateUUID();
         this.state = {
             showMenu: false,
-            editing: false,
-            warping: false,
-            xmlString: ''
+            editing:  false,
+            warpable: false,
+            languageMode: 'musicXML',
+            code: {
+                abc: '',
+                lilypond: '',
+                musicXML: '',
+                vexFlow: ''
+            }
         }
         this._bind();
     }
@@ -48,16 +54,15 @@ class Staff extends React.Component {
             Math.floor(Math.random() * 10e8);
     }
 
+
     handleHover() {
         this.showMenu();
     }
 
     showMenu() {
-        this.setState(() => ({showMenu: true}));
     }
 
     hideMenu() {
-        this.setState(() => ({showMenu: false}));
     }
 
     toggleState(key) {
@@ -71,15 +76,23 @@ class Staff extends React.Component {
         console.info('handling code editor change');
         console.info('p.value: ', value);
         this.setState(
-            () => ({xmlString: value}),
+            s => {
+                s.code[s.languageMode] = value;
+                return s;
+            },
             () => console.info('state set')
         );
     }, 1000);
 
+    toggleWarp() {
+        alert('this should turn on warping');
+        // this.toggleState('warpable');
+    }
+
     toggleEditing() {
         this.toggleState('editing');
     }
-                    // <StaffMenu right />
+
     render() {
         return (
             <div>
@@ -90,11 +103,15 @@ class Staff extends React.Component {
                     onMouseLeave={this.hideMenu}
                     style={{display: 'inline-block', background: 'rgba(0,0,0,0)'}}
                 >
-                    <PanelMenu className={"panel-heading " + (this.state.showMenu ? "" : "in") + "visible"} toggleEdit={this.toggleEditing}/>
+                    <PanelMenu
+                        className={"panel-heading " + (this.state.showMenu ? "" : "in") + "visible"}
+                        toggleEdit={this.toggleEditing}
+                        toggleWarp={this.toggleWarp}
+                    />
                     <StaffMusic
                         className="panel-body"
                         uuid={this.uuid}
-                        xmlString={this.state.xmlString}
+                        xmlString={this.state.code.musicXML}
                         {...this.props}
                     />
                 </div>
@@ -102,11 +119,15 @@ class Staff extends React.Component {
                     <CodeEditor
                         onChange={this.handleCodeEditorChange}
                         setValues={this.setValues}
+                        languageMode={this.state.languageMode}
                         noteId={this.uuid}
-                        currentValues={this.data.staves}
+                        storedValue={this.state.code[this.state.languageMode]}
                     />
                 )}
-                <MoveableStaff selector={".staff-note#" + this.uuid} />
+                <MoveableStaff
+                    selector={".staff-note#" + this.uuid}
+                    warpable={this.state.warpable}
+                />
             </div>
         );
     }

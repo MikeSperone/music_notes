@@ -2,10 +2,11 @@ import React from 'react';
 import {Controlled as ReactCodeMirror} from 'react-codemirror2';
 import CodeMirror from 'codemirror';
 import musicXMLtags from './musicXMLtags';
-// require('codemirror/addon/lint/lint');
+require('codemirror/addon/lint/lint');
 require('codemirror/addon/hint/show-hint');
 require('codemirror/addon/hint/xml-hint');
 require('codemirror/mode/xml/xml');
+require('codemirror/keymap/vim');
 
 export default class CodeEditor extends React.Component {
     constructor(props) {
@@ -17,8 +18,9 @@ export default class CodeEditor extends React.Component {
             mode: 'xml',
             theme: 'material',
             lineNumbers: true,
-            // gutters: ["CodeMirror-lint-markers"],
+            gutters: ["CodeMirror-lint-markers"],
             // selfContain: true,
+            keyMap: 'vim',
             extraKeys: {
                 "'<'": this.completeAfter,
                 "'/'": this.completeIfAfterLt,
@@ -65,6 +67,9 @@ export default class CodeEditor extends React.Component {
     }
 
     componentDidMount() {
+        if (this.props.storedValue) {
+            this.setState(() => ({value: this.props.storedValue}));
+        }
     }
 
     render() {
