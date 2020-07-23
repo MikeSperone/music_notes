@@ -41,12 +41,10 @@ class StaffMusic extends React.Component {
     setStateToData(data) {
         // setState with new staves
         this.setState(s => ({data}));
-        alert('values set... now do something with it');
     }
 
     renderStaff() {
         console.info('rendering staff');
-        //TODO: this.staffRef.current.clear();
         switch (this.renderer) {
             case 'xml':
                 console.info('rendering xml');
@@ -63,10 +61,10 @@ class StaffMusic extends React.Component {
     }
 
     componentDidMount() {
-        console.info('staff snippet');
         this.xmlRender = new XMLRenderer({
             staffElement: this.staffRef.current
         });
+
         this.VFRenderer = new VFRenderer({
             width: this.width,
             height: this.height,
@@ -86,24 +84,22 @@ class StaffMusic extends React.Component {
         this.renderStaff();
     }
 
-    // shouldComponentUpdate(nextProps, nextState) {
-    //     console.info('staff snippet should update?');
-    //     return (nextProps.xmlString !== this.xmlString);
-    // }
+    shouldComponentUpdate(nextProps, nextState) {
+        console.info('staff snippet should update?');
+        return (nextProps.xmlString !== this.xmlString);
+    }
 
     componentDidUpdate(prevProps) {
         console.info('staff snippet updated');
-        if (this.props.xmlString === prevProps.xmlString) {
-            return;
-        }
+        if (this.props.xmlString === prevProps.xmlString) return;
+
         this.xmlString = this.props.xmlString;
-        console.info('xmlString: ', this.props.xmlString);
         if (!!this.props.xmlString) this.renderer = 'xml';
         this.setState(
             () => ({ xmlString: this.props.xmlString }),
             () => {
-                console.info('ok... doing stuff now');
                 this.saveData(this.state);
+                this.staffRef.current.childNodes.forEach(n => n.remove());
                 this.renderStaff();
             });
     }
