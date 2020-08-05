@@ -7,7 +7,6 @@ import CodeEditor from 'components/Editor/CodeEditor';
 import debounce from 'lodash/debounce';
 
 import StaffMusic from './StaffSnippet';
-// import styles from './styles.scss';
 
 class Staff extends React.Component {
     constructor(props) {
@@ -38,6 +37,7 @@ class Staff extends React.Component {
         this.showMenu = this.showMenu.bind(this);
         this.hideMenu = this.hideMenu.bind(this);
         this.toggleEditing = this.toggleEditing.bind(this);
+        this.toggleWarp = this.toggleWarp.bind(this);
         this.handleCodeEditorChange = this.handleCodeEditorChange.bind(this);
     }
 
@@ -85,7 +85,7 @@ class Staff extends React.Component {
     }, 1000);
 
     toggleWarp() {
-        alert('this should turn on warping');
+        window.warpable[this.uuid] = !window.warpable[this.uuid];
         // this.toggleState('warpable');
     }
 
@@ -126,6 +126,7 @@ class Staff extends React.Component {
                 )}
                 <MoveableStaff
                     selector={".staff-note#" + this.uuid}
+                    uuid={this.uuid}
                     warpable={this.state.warpable}
                 />
             </div>

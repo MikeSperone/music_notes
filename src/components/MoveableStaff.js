@@ -2,6 +2,7 @@ import React from 'react';
 import Moveable from 'react-moveable';
 
 const MoveableStaff = props => {
+    window.warpable = window.warpable || {};
     const snappable = props.snapToGrid;
 
     const [target, setTarget] = React.useState();
@@ -88,7 +89,7 @@ const MoveableStaff = props => {
                 onRotateStart={({ set }) => set(frame.rotate) }
                 onRotate={ rotate }
 
-                warpable={props.warpable}
+                warpable={window.warpable[props.uuid]}
                 
                 onWarpStart={({ target, clientX, clientY  }) => {
                     console.log("onWarpStart", target);
