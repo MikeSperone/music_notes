@@ -59,11 +59,18 @@ class StaffPaper extends Component {
         return document.getElementsByClassName(this.targetClass);
     }
 
+            // <StaffPaperMenu handleAddStaffNote={this.addNote} />
     render() {
         return (<div id={'paper'}>
-            <StaffPaperMenu
-                handleAddStaffNote={this.addNote}
-            />
+            <button
+                onClick={this.addNote}
+                type="button"
+                className="add-new btn btn-default btn-link"
+                data-toggle="tooltip"
+                data-placement="left"
+                title=""
+                data-original-title="Add New"
+            >&#65291;</button>
             {this.state.staffNotes.map(this.createNote)}
         </div>);
     }

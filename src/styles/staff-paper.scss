@@ -1,0 +1,21 @@
+.add-new {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    color: rgba(100,100,100,0.4);
+
+    font-size: 4rem;
+    font-weight: lighter;
+    line-height: 4rem;
+    height: 4rem;
+    width: 4rem;
+
+    margin: 2rem;
+    padding:0;
+    border-radius: 50%;
+    border: 1px solid rgba(200,200,200,0.3);
+
+    &:hover {
+        box-shadow: 1px 1px 4px rgba(0,0,0,0.4);
+    }
+}

@@ -18,7 +18,7 @@ export default class CodeEditor extends React.Component {
             mode: 'xml',
             theme: 'material',
             lineNumbers: true,
-            gutters: ["CodeMirror-lint-markers"],
+            gutters: ["error", "CodeMirror-lint-markers"],
             // selfContain: true,
             keyMap: 'vim',
             extraKeys: {

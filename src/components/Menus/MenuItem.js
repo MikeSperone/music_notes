@@ -2,7 +2,7 @@ import React from 'react';
 
 const MenuItem = props => (
     <li className={props.className}>
-        <a onClick={props.onClick} href={props.href}>{props.text}</a>
+        <button onClick={props.onClick}>{props.text}</button>
     </li>
 );
 
