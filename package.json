@@ -38,6 +38,7 @@
         "react-codemirror2": "^7.2.1",
         "react-dom": "^16.13.1",
         "react-moveable": "^0.20.10",
+        "react-selecto": "^1.5.2",
         "vexflow": "^3.0.9",
         "vexflow-musicxml": "git+https://github.com/mechanicalscribe/vexflow-musicxml.git"
     }
