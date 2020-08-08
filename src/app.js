@@ -14,7 +14,7 @@ const App = props => (
             dragContainer={window}
             selectableTargets={[".staff-note"]}
             selectByClick={true}
-            selectFromInside={true}
+            selectFromInside={false}
             // After the select, whether to select the next target with the selected target (deselected if the target is selected again).
             continueSelect={false}
             // Determines which key to continue selecting the next target via keydown and keyup.

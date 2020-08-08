@@ -85,8 +85,8 @@ class Staff extends React.Component {
     }, 1000);
 
     toggleWarp() {
-        window.warpable[this.uuid] = !window.warpable[this.uuid];
-        // this.toggleState('warpable');
+        // window.warpable[this.uuid] = !window.warpable[this.uuid];
+        this.toggleState('warpable');
     }
 
     toggleEditing() {
@@ -125,15 +125,14 @@ class Staff extends React.Component {
                     />
                 )}
                 <MoveableStaff
-                    selector={".staff-note#" + this.uuid}
                     uuid={this.uuid}
                     warpable={this.state.warpable}
                 />
+
             </div>
         );
     }
 }
-
 // <label for="name">Name (4 to 8 characters):</label>
 // <input type="text" id="name" name="name" required
 //    minlength="4" maxlength="8" size="10">
