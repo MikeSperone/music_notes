@@ -16,19 +16,14 @@ class Staff extends React.Component {
         this.clef = this.props.clef;
         this.timeSignature = this.props.timeSignature;
         this.score = null;
-        this.uuid = this.generateUUID();
+        this.uuid = props.uuid; // this.generateUUID();
+        this.languageMode = props.languageMode;
+        this.code = props.code;
         this.state = {
             showMenu: false,
             editing:  false,
             warpable: false,
-            languageMode: 'musicXML',
-            code: {
-                abc: '',
-                lilypond: '',
-                musicXML: '',
-                vexFlow: ''
-            }
-        }
+        };
         this._bind();
     }
 
@@ -42,8 +37,8 @@ class Staff extends React.Component {
     }
 
     componentDidMount() {
-        if (!window.data) window.data = {};
-        this.data = window.data[this.uuid];
+        // if (!window.data) window.data = {};
+        // this.data = window.data[this.uuid];
     }
 
     generateUUID() {
@@ -111,7 +106,7 @@ class Staff extends React.Component {
                     <StaffMusic
                         className="panel-body"
                         uuid={this.uuid}
-                        xmlString={this.state.code.musicXML}
+                        xmlString={this.code.musicXML}
                         {...this.props}
                     />
                 </div>
@@ -119,9 +114,9 @@ class Staff extends React.Component {
                     <CodeEditor
                         onChange={this.handleCodeEditorChange}
                         setValues={this.setValues}
-                        languageMode={this.state.languageMode}
+                        languageMode={this.languageMode}
                         noteId={this.uuid}
-                        storedValue={this.state.code[this.state.languageMode]}
+                        storedValue={this.code[this.languageMode]}
                     />
                 )}
                 <MoveableStaff

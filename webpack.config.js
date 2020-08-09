@@ -65,6 +65,7 @@ module.exports = {
     },
     resolve: {
         alias: {
+            "actions": path.resolve(__dirname, 'src/actions/'),
             "components": path.resolve(__dirname, 'src/components/'),
             // Must be below test-utils
         },

@@ -8,17 +8,13 @@ class StaffPaper extends Component {
         super(props);
         this.props = props;
         this.id = 'paper';
-        this.state = {
-            targets: this.getTargets(),
-            staffNotes: [{name: "staff_0", clef: "treble", timeSignature: "4/4"}],
-        };
         this._bind();
     }
 
     _bind() {
         this.addNote = this.addNote.bind(this);
         this.removeNote = this.removeNote.bind(this);
-        this.createNote = this.createNote.bind(this);
+        this.displayNotes = this.displayNotes.bind(this);
         this.getTargets = this.getTargets.bind(this);
     }
 
@@ -31,11 +27,8 @@ class StaffPaper extends Component {
         this.setState(s => {
             const newNote = {
                 name: "staff_" + (s.staffNotes.length + 1),
-                clef: "treble",
-                timeSignature: "4/4"
             };
             s.staffNotes.push(newNote);
-            s.targets = this.getTargets();
             return s;
         });
     }
@@ -46,13 +39,8 @@ class StaffPaper extends Component {
         };
     }
 
-    createNote(note) {
-        return <StaffNote
-            key={note.name}
-            name={note.name}
-            clef={note.clef}
-            timeSignature={note.timeSignature}
-        />
+    displayNotes() {
+        return this.props.notes.map(note => <StaffNote key={note.uuid} {...note} />);
     }
 
     getTargets() {
@@ -71,7 +59,7 @@ class StaffPaper extends Component {
                 title=""
                 data-original-title="Add New"
             >&#65291;</button>
-            {this.state.staffNotes.map(this.createNote)}
+            {this.displayNotes()}
         </div>);
     }
 }
