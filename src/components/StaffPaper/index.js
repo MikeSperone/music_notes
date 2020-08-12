@@ -1,4 +1,7 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { createStaffNote } from 'actions/pageActions';
+
 import StaffNote from 'components/StaffNote';
 import confirmation from 'components/modals/confirmation';
 import StaffPaperMenu from './StaffPaperMenu';
@@ -12,7 +15,7 @@ class StaffPaper extends Component {
     }
 
     _bind() {
-        this.addNote = this.addNote.bind(this);
+        this.handleAddNote = this.handleAddNote.bind(this);
         this.removeNote = this.removeNote.bind(this);
         this.displayNotes = this.displayNotes.bind(this);
         this.getTargets = this.getTargets.bind(this);
@@ -22,13 +25,10 @@ class StaffPaper extends Component {
 
     }
             
-    addNote() {
+    handleAddNote() {
         console.log('adding note');
+        this.props.createStaffNote();
         this.setState(s => {
-            const newNote = {
-                name: "staff_" + (s.staffNotes.length + 1),
-            };
-            s.staffNotes.push(newNote);
             return s;
         });
     }
@@ -40,18 +40,20 @@ class StaffPaper extends Component {
     }
 
     displayNotes() {
-        return this.props.notes.map(note => <StaffNote key={note.uuid} {...note} />);
+        const noteIds = this.props.notes.allIds;
+        const allNotes = this.props.notes.byIds;
+        return noteIds.map(i => <StaffNote key={i} {...allNotes[i]} />);
     }
 
     getTargets() {
         return document.getElementsByClassName(this.targetClass);
     }
 
-            // <StaffPaperMenu handleAddStaffNote={this.addNote} />
+            // <StaffPaperMenu handleAddStaffNote={this.handleAddNote} />
     render() {
         return (<div id={'paper'}>
             <button
-                onClick={this.addNote}
+                onClick={this.handleAddNote}
                 type="button"
                 className="add-new btn btn-default btn-link"
                 data-toggle="tooltip"
@@ -64,4 +66,9 @@ class StaffPaper extends Component {
     }
 }
 
-export default StaffPaper;
+const mapStateToProps = state => ({
+    page: state.page,
+    notes: state.notes
+});
+
+export default connect(mapStateToProps, { createStaffNote })(StaffPaper);

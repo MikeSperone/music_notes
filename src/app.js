@@ -1,6 +1,4 @@
 import React from 'react';
-import { connect  } from 'react-redux';
-import { doAThing } from 'actions/pageActions';
 import AppMenu from 'components/Menus/AppMenu';
 import StaffPaper from 'components/StaffPaper';
 import Selecto from "react-selecto";
@@ -11,9 +9,7 @@ const App = props => {
     console.info('props.notes: ', props.notes);
 
     return (<React.Fragment>
-        <StaffPaper
-            notes={props.notes}
-        />
+        <StaffPaper />
         <Selecto
             container={document.body}
             dragContainer={window}
@@ -40,12 +36,4 @@ const App = props => {
     </React.Fragment>);
 };
 
-const mapStateToProps = state => ({
-    page: state.page,
-    notes: state.notes
-});
-
-export default connect(
-    mapStateToProps,
-    { doAThing }
-)(App);
+export default App;

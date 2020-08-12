@@ -16,7 +16,7 @@ class Staff extends React.Component {
         this.clef = this.props.clef;
         this.timeSignature = this.props.timeSignature;
         this.score = null;
-        this.uuid = props.uuid; // this.generateUUID();
+        this.uuid = props.uuid;
         this.languageMode = props.languageMode;
         this.code = props.code;
         this.state = {
@@ -39,14 +39,6 @@ class Staff extends React.Component {
     componentDidMount() {
         // if (!window.data) window.data = {};
         // this.data = window.data[this.uuid];
-    }
-
-    generateUUID() {
-        return this.props.name +
-            "-" +
-            Math.floor(Math.random() * 10e8) +
-            "-" +
-            Math.floor(Math.random() * 10e8);
     }
 
 
